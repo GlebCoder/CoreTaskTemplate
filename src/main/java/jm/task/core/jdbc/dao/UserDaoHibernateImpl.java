@@ -48,29 +48,49 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, int age) {
 
-        Transaction transaction = null;
-        try(Session session = Util.getSessionFactory2().openSession()) {
-            transaction = session.beginTransaction();
+        try(Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
             User user = new User(name, lastName, age);
             session.save(user);
             transaction.commit();
         } catch(Exception e) {
-            System.out.println("Problem with saveUser method");
+            e.printStackTrace();
         }
     }
 
     @Override
     public void removeUserById(long id) {
-
+        try(Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User user = session.get(User.class, id);
+            session.delete(user);
+            transaction.commit();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> getAllUsers = null;
+        try(Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            getAllUsers = session.createQuery("from User").getResultList();
+            transaction.commit();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return getAllUsers;
     }
 
     @Override
     public void cleanUsersTable() {
-
+        try(Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.createQuery("delete User");
+            transaction.commit();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }

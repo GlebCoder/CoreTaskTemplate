@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Table(name="users")
 public class User implements Serializable {
     @Id
+    @GeneratedValue()
     @Column(name="id")
     private Long id;
 
